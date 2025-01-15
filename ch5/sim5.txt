@@ -1,0 +1,34 @@
+Consider ./fork.py -F -s 8:
+
+    $ ./fork.py -F -s 8:
+
+    ARG seed 8
+    ARG fork_percentage 0.7
+    ARG actions 5
+    ARG action_list
+    ARG show_tree False
+    ARG just_final True
+    ARG leaf_only False
+    ARG local_reparent False
+    ARG print_style fancy
+    ARG solve False
+
+                               Process Tree:
+                                   a
+
+    Action: a forks b
+    Action: b forks c
+    Action: a forks d
+    Action: b forks e
+    Action: c forks f
+
+                            Final Process Tree?
+
+The final process tree will be:
+
+a
+|-b
+| |-c
+| | `-f
+| `-e
+`-d

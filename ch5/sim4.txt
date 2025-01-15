@@ -1,0 +1,50 @@
+By default, the orphaned sub-tree is flattened and the constituent processes
+are grafted onto the root process. When the -R/--local-reparent flag is given,
+the sub-tree is instead grafted onto the nearest ancestor up the tree without
+being flattened.
+
+Before process C exits, the process tree is as follows:
+
+a
+`-b
+  `-c
+    |-f
+    `-e
+
+With the default behaviour, after exiting, the tree becomes:
+
+a
+|-b
+| `-c
+|-f
+`-e
+
+When the -R/--local-reparent flag is specified, the tree becomes:
+
+a
+`-b
+  |-f
+  `-e
+
+Here is a slightly more elaborate example, showing the sub-tree flattening (or
+lack thereof):
+
+    $ ./fork.py -A a+b,b+c,c+d,c+e,d+f,f+g,d+h,c- -c
+    [...]
+    a
+    ├── b
+    ├── d
+    ├── f
+    ├── g
+    ├── h
+    └── e
+
+    $ ./fork.py -A a+b,b+c,c+d,c+e,d+f,f+g,d+h,c- -R -c
+    [...]
+    a
+    └── b
+       ├── d
+       │   ├── f
+       │   │   └── g
+       │   └── h
+       └── e

@@ -1,0 +1,50 @@
+Take ./fork.py -s 16 -t, for example:
+
+    $ ./fork.py -s 16 -t
+    ARG seed 16
+    ARG fork_percentage 0.7
+    ARG actions 5
+    ARG action_list
+    ARG show_tree True
+    ARG just_final False
+    ARG leaf_only False
+    ARG local_reparent False
+    ARG print_style fancy
+    ARG solve False
+
+                               Process Tree:
+                                   a
+
+    Action?
+                                   a
+                                   └── b
+    Action?
+                                   a
+                                   ├── b
+                                   └── c
+    Action?
+                                   a
+                                   ├── b
+                                   │   └── d
+                                   └── c
+    Action?
+                                   a
+                                   ├── b
+                                   │   └── d
+                                   └── c
+                                       └── e
+    Action?
+                                   a
+                                   ├── b
+                                   │   ├── d
+                                   │   └── f
+                                   └── c
+                                       └── e
+
+A set of 5 actions that produce this tree is:
+
+a forks b
+a forks c
+b forks d
+c forks e
+b forks f

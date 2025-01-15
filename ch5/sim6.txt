@@ -1,0 +1,51 @@
+Consider ./fork.py -F -s 4 -t
+
+    $ ./fork.py -F -s 4 -t
+
+    ARG seed 4
+    ARG fork_percentage 0.7
+    ARG actions 5
+    ARG action_list
+    ARG show_tree True
+    ARG just_final True
+    ARG leaf_only False
+    ARG local_reparent False
+    ARG print_style fancy
+    ARG solve False
+
+                               Process Tree:
+                                   a
+
+    Action?
+    Action?
+    Action?
+    Action?
+    Action?
+
+                            Final Process Tree:
+                                   a
+                                   ├── b
+                                   ├── c
+                                   └── e
+
+There are a number of ways to construct this tree. One might be:
+
+a forks b
+a forks c
+a forks d
+a forks e
+d exits
+
+Another could be (keeping in mind that the -R/--local-reparent switch is off,
+so the sub-tree will be flattened on reparenting):
+
+a forks d
+d forks b
+b forks c
+c forks e
+d exits
+
+This is conjecture, but assuming that names are assigned in alphabetic order,
+the actions constructing a given tree are deterministic if (and only if?) none
+of the processes exit. If some process does exit, then there may be a number
+of different paths to the given tree.
