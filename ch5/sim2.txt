@@ -1,0 +1,6 @@
+With higher fork percentages, the resultant trees will be deeper and wider,
+because fewer processes exit.
+
+With lower fork percentages, the resultant trees will be shallower and
+thinner. Additionally, processes are more likely to be orphaned when parent
+nodes exit before their children do.

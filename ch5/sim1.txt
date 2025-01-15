@@ -1,0 +1,17 @@
+Step 0
+a
+
+Step 1
+a
+`-b
+
+Step 2
+a
+|-b
+`-c
+
+Step 3
+a
+|-b
+|-d
+`-e
