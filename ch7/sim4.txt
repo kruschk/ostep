@@ -1,0 +1,4 @@
+FIFO and SJF yield identical behaviour when either the jobs are all of the
+same length, or when they arrive in increasing order of length. Alternatively,
+one could say that the jobs must arrive in strictly non-decreasing order of
+length to produce identical behaviour.

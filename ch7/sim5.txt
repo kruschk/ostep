@@ -1,0 +1,3 @@
+The two policies will yield identical behaviour when all of the given jobs are
+of equal length and the round-robin quantum length is equal to this job
+length.

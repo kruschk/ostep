@@ -1,0 +1,13 @@
+Given an equal number of equal-length jobs, the FIFO and SFJ policies behave
+identically, producing the following response and turnaround times:
+
+- Response time: (0 + 200 + 400) / 3 = 200
+- Turnaround time: (200 + 400 + 600) / 3 = 400
+
+This can be confirmed by running the following commands:
+
+    $ ./scheduler.py -c -l 200,200,200 -p FIFO
+    [...]
+
+    $ ./scheduler.py -c -l 200,200,200 -p SJF
+    [...]

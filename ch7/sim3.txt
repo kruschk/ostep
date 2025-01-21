@@ -1,0 +1,12 @@
+The round-robin scheduler yields the following response and turnaround times:
+
+    $ ./scheduler.py -c -l 200,100,300 -p RR -q 1
+    [...]
+
+- Response time: (0 + 1 + 2) / 3 = 1
+- Turnaround time: 466
+
+Note that the response time is easy to predict, but the turnaround time is
+less so because the simulator initially executes 3 jobs, then 2 after the
+shortest one finishes (thus changing the time spent on each), then just 1
+after the next shortest one finishes (again changing the job load).

@@ -1,0 +1,22 @@
+Under SJF, as job lengths increase, average response time worsens (increases).
+This is because the response time of a given job is determined by the sum of
+the lengths of all the jobs that run before it. The trend can be demonstrated
+by running the simulator several times with equal-length jobs:
+
+    $ ./scheduler.py -c -l 1,1 -p SJF
+    [...]
+
+    $ ./scheduler.py -c -l 2,2 -p SJF
+    [...]
+
+    $ ./scheduler.py -c -l 3,3 -p SJF
+    [...]
+
+    $ ./scheduler.py -c -l 4,4 -p SJF
+    [...]
+
+    $ ./scheduler.py -c -l 5,5 -p SJF
+    [...]
+
+    $ [...]
+    [...]

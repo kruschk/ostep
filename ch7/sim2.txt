@@ -1,0 +1,11 @@
+The order of jobs given in the problem statement is uninteresting (FIFO and
+SJF will behave the same), so I will use the following job list instead: 200,
+100, 300.
+
+FIFO ($ ./scheduler.py -c -l 200,100,300 -p FIFO):
+- Response time: (0 + 200 + 300) / 3 ~= 166.7
+- Turnaround time: (200 + 300 + 600) / 3 ~= 366.7
+
+SJF ($ ./scheduler.py -c -l 200,100,300 -p SJF):
+- Response time: (0 + 100 + 300) / 3 ~= 133.3
+- Turnaround time: (100 + 300 + 600) / 3 ~= 333.3

@@ -1,0 +1,35 @@
+In general, the response time of an individual job under round-robin will be:
+
+t_resp(j, l, q) = min(l[1], q) + min(l[2], q) + ... + min(l[j-1], q)
+                = sum(min(l[i], q) for i = 1 to i = j - 1)
+
+where j is a job index (beginning from 1), l is a list of job lengths, and q
+is the time quantum. The average response time is then:
+
+t_resp_avg(l, q) = sum(t_response(i, l, q) for i = 1 to i = len(l))
+                   / len(l)
+                 = (  t_response(1, l, q) # NOTE: always 0
+                    + t_response(2, l, q)
+                    + ...
+                    + t_response(len(l), l, q))
+                   / len(l)
+                 = (  0
+                    + min(l[1], q)
+                    + min(l[1], q) + min(l[2], q)
+                    + ...
+                    + min(l[1], q) + min(l[2], q) + ... + min(l[len(l)-1], q))
+                   / len(l)
+                 = (  (len(l) - 1) * min(l[1], q)
+                    + (len(l) - 2) * min(l[2], q)
+                    + ...
+                    + 2 * min(l[len(l)-2], q)
+                    + 1 * min(l[len(l)-1], q))
+                   / len(l)
+                 = sum((len(l) - i) * min(l[i], q) for i = 1 to i = len(l) - 1)
+                   / len(l)
+
+From this, we can infer that (assuming q < l[i] for some i to begin with) as
+the time quantum increases, the average response time worsens (increases)
+until the quantum meets or exceeds the length of every individual job (i.e.,
+l[i] <= q for all i), at which point the behaviour degenerates to that of a
+FIFO scheme.
