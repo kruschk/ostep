@@ -1,0 +1,11 @@
+In the simulation described by the following command, once the second job
+begins, it will consume 99 % of the CPU's time until it finishes.
+
+    $ ./mlfq.py -S -a 1 -c -i 1 -l 0,1000,0:0,1000,99 -n 2 -q 100
+    [...]
+
+This is slightly easier to see in the following simulation's output, in which
+the second job consumes 90 % of the CPU's time.
+
+    $ ./mlfq.py -S -a 1 -c -i 1 -l 0,100,0:0,100,9 -n 2 -q 10
+    [...]

@@ -1,0 +1,21 @@
+Imagine that the long-running job (job 0) has fallen to the lowest priority
+queue, and that another job (job 1) has managed to achieve 100 % CPU
+utilisation by issuing instantaneous I/O requests. This can be simulated as
+follows:
+
+    $ ./mlfq.py -S -a 1 -c -i 0 -l 0,1000,0:0,1000,9 -n 2 -q 10
+    [...]
+
+To ensure job 0 gets at least 5 % utilisation, we can periodically boost job
+priorities to ensure that it is given at least one allotment (i.e., one 10 ms
+interval) of CPU time every boost. We wish to satisfy the inequality below:
+
+    5 % <= 10 ms / t
+
+    t <= 10 ms / 5 % = 200 ms
+
+Thus, our priority boost period must be at most 200 ms. This can be simulated
+with the following command:
+
+    $ ./mlfq.py -B 200 -S -a 1 -c -i 0 -l 0,1000,0:0,1000,9 -n 2 -q 10
+    [...]

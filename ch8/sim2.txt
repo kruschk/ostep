@@ -1,0 +1,17 @@
+Each figure in the text can be reproduced in the simulator (approximately,
+since not all parameters are known) as follows:
+
+- Figure 8.2: $ ./mlfq.py -a 1 -c -l 0,200,0 -n 3 -q 10
+- Figure 8.3
+  - Left: $ ./mlfq.py -a 1 -c -l 0,180,0:100,20,0 -n 3 -q 10
+  - Right: $ ./mlfq.py -a 1 -c -l 0,180,0:50,23,1 -n 3 -q 10
+- Figure 8.4
+  - Left: $ ./mlfq.py -S -a 1 -c -l 0,200,0:100,50,5:100,50,5 -n 3 -q 10
+  - Right: $ ./mlfq.py -B 100 -S -a 1 -c -l 0,200,0:100,50,5:100,50,5 -n 3 -q 10
+    Note that, in the figure, the boosted job should not remain in Q2 after
+    running for one allotment period; it should be deprioritised until the
+    next boost.
+- Figure 8.5
+  - Left: $ ./mlfq.py -S -a 1 -c -i 1 -l 0,200,0:100,50,9 -n 3 -q 10
+  - Right: $ ./mlfq.py -a 1 -c -i 1 -l 0,200,0:100,50,9 -n 3 -q 10
+- Figure 8.6: $ ./mlfq.py -A 2,2,1 -Q 10,20,40 -c -l 0,140,0:0,140,0

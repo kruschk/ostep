@@ -1,0 +1,5 @@
+To run simulations, simply issue the following command, modifying the seed
+value as desired:
+
+    $ ./mlfq.py -c -j 2 -n 2 -s 1
+    [...]

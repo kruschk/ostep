@@ -1,0 +1,5 @@
+When the number of queues is set to one, the MLFQ behaviour will resemble that
+of a round robin scheduler. With this configuration, the allotment period will
+have no effect because there are no lower priority queues to bump jobs down
+to. Similarly, the boost parameter will also have no effect, because there are
+no higher priority queues to bump jobs up to.
