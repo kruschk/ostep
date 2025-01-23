@@ -1,0 +1,39 @@
+The figure can be recreated by running the simulator 30 times, computing
+fairness scores for each trial, and then plotting the job lengths against the
+fairness scores:
+
+    $ ./lottery.py -c -l 1:1,1:1
+    [...]
+
+    $ ./lottery.py -c -l 34:1,34:1
+    [...]
+
+    $ ./lottery.py -c -l 68:1,68:1
+    [...]
+
+    $ ./lottery.py -c -l 101:1,101:1
+    [...]
+
+    $ [...]
+    [...]
+
+    $ ./lottery.py -c -l 933:1,933:1
+    [...]
+
+    $ ./lottery.py -c -l 967:1,967:1
+    [...]
+
+    $ ./lottery.py -c -l 1000:1,1000:1
+    [...]
+
+The figure doesn't have any fairness scores greater than 1, implying that the
+fairness metric always places the job that finishes first in the numerator,
+and the job that finishes second in the denominator, as opposed placing them
+according to how they are originally numbered. This doesn't matter too much as
+long as we understand that scores near 1 are fair and scores far from 1 are
+unfair.
+
+According to the text, the stride scheduler is perfectly fair (at the end of
+each scheduling cycle), so the analogous fairness plot should be a constant 1
+(horizontal line) for all job lengths. I have not confirmed this claim, so
+consider it a conjecture.

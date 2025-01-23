@@ -1,0 +1,22 @@
+To get an idea of how fair the scheduler is, we run the simulation several
+times with varying random seeds, and compute a fairness score each time:
+
+    $ # F = R0 / R1 = 192 / 200 = 0.960
+    $ ./lottery.py -c -l 100:100,100:100 -s 0
+    [...]
+
+    $ # F = 200 / 196 ~= 1.020
+    $ ./lottery.py -c -l 100:100,100:100 -s 1
+    [...]
+
+    $ # F = 200 / 190 ~= 1.053
+    $ ./lottery.py -c -l 100:100,100:100 -s 2
+    [...]
+
+    $ # F = 196 / 200 = 0.980
+    $ ./lottery.py -c -l 100:100,100:100 -s 3
+    [...]
+
+From these samples, we can compute a mean fairness score of 1.003, which is
+quite fair. Over a large number of trials, the average fairness should tend
+toward 1.

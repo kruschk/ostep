@@ -1,0 +1,10 @@
+These simulations can be run by issuing the following commands:
+
+    $ ./lottery.py -c -j 3 -s 1
+    [...]
+
+    $ ./lottery.py -c -j 3 -s 2
+    [...]
+
+    $ ./lottery.py -c -j 3 -s 3
+    [...]

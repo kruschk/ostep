@@ -1,0 +1,13 @@
+As the time quantum grows, the schedule becomes less fair, because each task,
+after winning the lottery, will be given more time to work, thus decreasing
+the number of scheduling iterations performed (and thereby lotteries held).
+This can be observed by running the simulator with different quanta, e.g.:
+
+    $ ./lottery.py -c -l 100:100,100:100 -q 1
+    [...]
+
+    $ ./lottery.py -c -l 100:100,100:100 -q 10
+    [...]
+
+    $ ./lottery.py -c -l 100:100,100:100 -q 100
+    [...]

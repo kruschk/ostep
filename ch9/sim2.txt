@@ -1,0 +1,13 @@
+When there is a large imbalance in the number of tickets assigned to each job,
+the process with more tickets will dominate the CPU, starving the other.
+
+Job 0 will occasionally run before job 1 completes, but only for 1 out of 101
+iterations, on average. The following simulation demonstrates job 0 running
+before job 1 completes:
+
+    $ ./lottery.py -c -l 10:1,10:100 -s 2
+    [...]
+
+In general, as the imbalance in tickets grows, the lottery scheduler will more
+closely resemble a FIFO queue, where the processes with the most tickets run
+first and those with the least, last.
