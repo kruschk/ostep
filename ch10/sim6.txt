@@ -1,0 +1,26 @@
+Job A runs entirely on CPU 0, while B and C run entirely on CPU 1. Note that
+job A's working set fits entirely within CPU 0's cache, and those of jobs B
+and C fit entirely within CPU 1's cache. This means that the jobs will all
+benefit from excellent cache affinity; once the caches are hot, they will
+never cool until both jobs are done. We can therefore predict the execution
+times without too much difficulty:
+
+    cpu0_time = caching_job_time_a
+              = cold_time + (noncaching_job_time - cold_time) / warm_rate
+              = 10 + (100 - 10) / 2
+              = 55
+
+    cpu1_time = caching_job_time_b + caching_job_time_c
+              = 2 * caching_job_time_b
+              = 2 * (cold_time + (noncaching_job_time_b - cold_time)
+                                 / warm_rate)
+              = 2 * (10 + (100 - 10) / 2)
+              = 2 * 55
+              = 110
+
+    total_time = max(cpu0_time, cpu1_time)
+               = max(55, 110)
+               = 110
+
+I can't imagine any alternative affinities that will improve on this result; I
+believe this one is optimal.

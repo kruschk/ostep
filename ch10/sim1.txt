@@ -1,0 +1,3 @@
+The cache cannot contain the entire working set, so it will never warm up and
+the job will receive no run time bonus. The job will therefore require the
+full 30 ticks to complete. The simulation confirms this hypothesis.

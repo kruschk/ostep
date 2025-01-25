@@ -1,0 +1,41 @@
+Study the following simulations to get a better idea of the various
+trade-offs:
+
+    $ ./multi.py -CSTct -M 100 -n 1
+    [...]
+
+    $ ./multi.py -CSTct -M 100 -n 2
+    [...]
+
+    $ ./multi.py -CSTct -M 100 -n 3
+    [...]
+
+
+    $ ./multi.py -CSTcpt -M 100 -n 1
+    [...]
+
+    $ ./multi.py -CSTcpt -M 100 -n 2
+    [...]
+
+    $ ./multi.py -CSTcpt -M 100 -n 3
+    [...]
+
+
+    $ ./multi.py -CSTct -M 050 -n 2
+    [...]
+
+    $ ./multi.py -CSTct -M 100 -n 2
+    [...]
+
+    $ ./multi.py -CSTct -M 200 -n 2
+    [...]
+
+
+    $ ./multi.py -CSTcpt -M 050 -n 2
+    [...]
+
+    $ ./multi.py -CSTcpt -M 100 -n 2
+    [...]
+
+    $ ./multi.py -CSTcpt -M 200 -n 2
+    [...]

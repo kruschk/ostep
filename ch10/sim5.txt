@@ -1,0 +1,6 @@
+The simulation completes in 150 ticks. The cache performance is very poor, in
+fact, the caches aren't used at all. From the traces, it becomes clear why:
+poor cache affinity and an unfortunate combination of time quantum and cache
+warm-up time. As soon as a job runs long enough on a CPU to warm the cache,
+the scheduler switches that CPU to a new task, and by the time the task is
+rescheduled on the same CPU, the cache has already been cleared.

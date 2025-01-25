@@ -1,0 +1,2 @@
+When the cache is cold, the time left in the process falls by 1 each tick, but
+once the cache warms, it falls by 2 units per tick.

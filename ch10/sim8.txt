@@ -1,0 +1,19 @@
+This simulation, which uses MQMS, performs better than the analogous SQMS, but
+not as well as the specialised affinities configured in part 6. This is mainly
+due to the improved cache affinity that MQMS offers. The difference can be
+observed by running the following simulations:
+
+    $ ./multi.py -CCSTcpt -L a:100:100,b:100:50,c:100:50 -n 2
+    [...]
+
+    $ ./multi.py -CCSTcpt -L a:100:100,b:100:50,c:100:50 -n 2
+    [...]
+
+The peek interval does not have a significant impact in these simulations
+because there aren't enough jobs in the queues for work-stealing to be
+beneficial. Ideally, short peek intervals are best, because they balance loads
+better, but in reality, they incur overhead; thus, there is a balance to be
+struck.
+
+As discussed in the text, MQMS scales well with CPU count because it avoids
+cache and lock contention.

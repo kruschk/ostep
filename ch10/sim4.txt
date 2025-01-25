@@ -1,0 +1,5 @@
+The cache warms up after 10 ticks, which is the default warm-up time.
+Decreasing the warm-up time expedites the onset of the caching performance
+boost, thereby reducing the overall run time of the job. Increasing the
+warm-up time delays the performance boost, thereby increasing the overall run
+time of the job (unless it happes to be shorter than the warm-up time).

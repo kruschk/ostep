@@ -1,0 +1,20 @@
+The job will run much faster because the entire working set fits within the
+cache. We can relate the non-caching job time to cold and warm times as
+follows:
+
+    noncaching_job_time = cold_time + warm_rate * warm_time
+
+Where noncaching_job_time is the time required to run the job without the
+benefit of a caching processor, cold_time is the time required to warm the
+cache, warm_rate is the multiplicative speed-up gained when the cache is warm,
+and warm_time is the time interval during which the cache is warm.
+
+Rearranging and plugging numbers in yields:
+
+    warm_time = (noncaching_job_time - cold_time) / warm_rate
+              = (30 - 10) / 2
+              = 10
+
+A caching processor will finish the job in the sum of the cold and warm times:
+
+    caching_job_time = cold_time + warm_time = 10 + 10 = 20

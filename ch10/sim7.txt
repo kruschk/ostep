@@ -1,0 +1,61 @@
+In the first three cases, the cache size is smaller than all of the working
+sets, so caching never occurs. The increased parallelism is the only factor
+improving performance:
+
+    $ ./multi.py -CCSTct -L a:100:100,b:100:100,c:100:100 -M 50 -n 1
+    [...]
+    Finished time 300
+
+    Per-CPU stats
+      CPU 0  utilization 100.00 [ warm 0.00 ]
+
+    $ ./multi.py -CCSTct -L a:100:100,b:100:100,c:100:100 -M 50 -n 2
+    [...]
+    Finished time 150
+
+    Per-CPU stats
+      CPU 0  utilization 100.00 [ warm 0.00 ]
+      CPU 1  utilization 100.00 [ warm 0.00 ]
+
+    $ ./multi.py -CCSTct -L a:100:100,b:100:100,c:100:100 -M 50 -n 3
+    [...]
+    Finished time 100
+
+    Per-CPU stats
+      CPU 0  utilization 100.00 [ warm 0.00 ]
+      CPU 1  utilization 100.00 [ warm 0.00 ]
+      CPU 2  utilization 100.00 [ warm 0.00 ]
+
+In the next two cases, the cache size is larger than all of the working sets;
+however, due to poor affinity, the caches (which do warm up) are cleared
+before they can offer any performance benefit. These cases behave
+similarly to the first two with the smaller cache size:
+
+    $ ./multi.py -CCSTct -L a:100:100,b:100:100,c:100:100 -M 100 -n 1
+    [...]
+    Finished time 300
+
+    Per-CPU stats
+      CPU 0  utilization 100.00 [ warm 0.00 ]
+
+    $ ./multi.py -CCSTct -L a:100:100,b:100:100,c:100:100 -M 100 -n 2
+    [...]
+    Finished time 150
+
+    Per-CPU stats
+      CPU 0  utilization 100.00 [ warm 0.00 ]
+      CPU 1  utilization 100.00 [ warm 0.00 ]
+
+In the last case, the cache affinity improves because there is never any need
+to move jobs to a different processor. This means the caches are finally put
+to use and, combined with the increased parallelism, we observe a super-linear
+performance enhancement:
+
+    $ ./multi.py -CCSTct -L a:100:100,b:100:100,c:100:100 -M 100 -n 3
+    [...]
+    Finished time 55
+
+    Per-CPU stats
+      CPU 0  utilization 100.00 [ warm 81.82 ]
+      CPU 1  utilization 100.00 [ warm 81.82 ]
+      CPU 2  utilization 100.00 [ warm 81.82 ]
