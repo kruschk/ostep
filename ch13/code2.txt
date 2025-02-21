@@ -1,0 +1,28 @@
+Running free produces the following output:
+
+    $ free -h
+                   total        used        free      shared  buff/cache   available
+    Mem:           7.7Gi       1.9Gi       4.6Gi        65Mi       1.5Gi       5.8Gi
+    Swap:          8.0Gi          0B       8.0Gi
+
+From it, we can see that this system can use 7.7 GiB of RAM (ignoring swap
+space). This is slightly less than the physical 8 GiB of RAM installed on this
+machine because some memory is reserved by the kernel. In other words, one
+could state that there is 7.7 GiB of memory in user space. 1.9 GiB is in use,
+and 4.6 GiB of memory is free. This is slightly unintuitive because
+
+    used != total - free;
+
+i.e.,
+
+    1.9 GiB != 7.7 GiB - 4.6 GiB = 3.1 GiB.
+
+This is because
+
+    used = total - available,
+
+where available is a slightly different metric: free memory is memory that is
+completely unused, while available memory is an estimate of how much memory
+can be used without swapping. Free memory can be thought of as wasted memory,
+because it's not doing anything productive. See the free man pages and
+https://www.linuxatemyram.com/ for details.

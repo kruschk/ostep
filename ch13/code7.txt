@@ -1,0 +1,41 @@
+Consider the following command:
+
+    $ pmap -X 198560
+    198560:   ./memory-user 128 -1
+             Address Perm   Offset Device    Inode   Size    Rss    Pss Pss_Dirty Referenced Anonymous KSM LazyFree ShmemPmdMapped FilePmdMapped Shared_Hugetlb Private_Hugetlb Swap SwapPss Locked THPeligible Mapping
+        574fa5a00000 r--p 00000000  08:12 20324526      4      4      2         0          4         0   0        0              0             0              0               0    0       0      0           0 memory-user
+        574fa5a01000 r-xp 00001000  08:12 20324526      4      4      2         0          4         0   0        0              0             0              0               0    0       0      0           0 memory-user
+        574fa5a02000 r--p 00002000  08:12 20324526      4      0      0         0          0         0   0        0              0             0              0               0    0       0      0           0 memory-user
+        574fa5a03000 r--p 00002000  08:12 20324526      4      4      4         4          4         4   0        0              0             0              0               0    0       0      0           0 memory-user
+        574fa5a04000 rw-p 00003000  08:12 20324526      4      4      4         4          4         4   0        0              0             0              0               0    0       0      0           0 memory-user
+        574fe2f6d000 rw-p 00000000  00:00        0    132      4      4         4          4         4   0        0              0             0              0               0    0       0      0           0 [heap]
+        764b1d51e000 rw-p 00000000  00:00        0 131088 131084 131084    131084     131084    131084   0        0              0             0              0               0    0       0      0           1
+        764b25522000 r--p 00000000  08:12 12324085    144    144      2         0        144         0   0        0              0             0              0               0    0       0      0           1 libc.so.6
+        764b25546000 r-xp 00024000  08:12 12324085   1476    932     17         0        932         0   0        0              0             0              0               0    0       0      0           1 libc.so.6
+        764b256b7000 r--p 00195000  08:12 12324085    316    124      2         0        124         0   0        0              0             0              0               0    0       0      0           1 libc.so.6
+        764b25706000 r--p 001e3000  08:12 12324085     16     16     16        16         16        16   0        0              0             0              0               0    0       0      0           0 libc.so.6
+        764b2570a000 rw-p 001e7000  08:12 12324085      8      8      8         8          8         8   0        0              0             0              0               0    0       0      0           0 libc.so.6
+        764b2570c000 rw-p 00000000  00:00        0     40     24     24        24         24        24   0        0              0             0              0               0    0       0      0           0
+        764b25740000 r--p 00000000  00:00        0      8      0      0         0          0         0   0        0              0             0              0               0    0       0      0           0 [vvar]
+        764b25742000 r--p 00000000  00:00        0      8      0      0         0          0         0   0        0              0             0              0               0    0       0      0           0 [vvar_vclock]
+        764b25744000 r-xp 00000000  00:00        0      8      8      0         0          8         0   0        0              0             0              0               0    0       0      0           0 [vdso]
+        764b25746000 r--p 00000000  08:12 12324075      4      4      0         0          4         0   0        0              0             0              0               0    0       0      0           0 ld-linux-x86-64.so.2
+        764b25747000 r-xp 00001000  08:12 12324075    164    164      3         0        164         0   0        0              0             0              0               0    0       0      0           1 ld-linux-x86-64.so.2
+        764b25770000 r--p 0002a000  08:12 12324075     44     40      0         0         40         0   0        0              0             0              0               0    0       0      0           1 ld-linux-x86-64.so.2
+        764b2577b000 r--p 00035000  08:12 12324075      8      8      8         8          8         8   0        0              0             0              0               0    0       0      0           0 ld-linux-x86-64.so.2
+        764b2577d000 rw-p 00037000  08:12 12324075      4      4      4         4          4         4   0        0              0             0              0               0    0       0      0           0 ld-linux-x86-64.so.2
+        764b2577e000 rw-p 00000000  00:00        0      4      4      4         4          4         4   0        0              0             0              0               0    0       0      0           0
+        7ffcaa7b9000 rw-p 00000000  00:00        0    132     16     16        16         16        16   0        0              0             0              0               0    0       0      0           0 [stack]
+    ffffffffff600000 --xp 00000000  00:00        0      4      0      0         0          0         0   0        0              0             0              0               0    0       0      0           0 [vsyscall]
+                                                   ====== ====== ====== ========= ========== ========= === ======== ============== ============= ============== =============== ==== ======= ====== ===========
+                                                   133628 132600 131204    131176     132600    131176   0        0              0             0              0               0    0       0      0           6 KB
+
+From the output, we can see segments for code (memory-user), the heap (heap),
+shared object libraries (libc.so.6, ld-linux-x86-64.so.2), facilities for
+improving system call performance (vvar, vvar_vclock, vdso, vsyscall), and the
+stack (stack).
+
+Oddly, the size of the heap memory appears to be listed in the row following
+the [heap] record (based on the numeric value). I don't understand why this
+is, unless this indicates something like a header section followed by a data
+section.

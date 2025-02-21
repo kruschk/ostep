@@ -1,0 +1,31 @@
+We can investigate the behaviour by running the following command:
+
+    $ free -m && ./memory-user 256 2 \
+      & { sleep 2 && free -m; } \
+      & { sleep 4 && free -m; }
+    [1] 150994
+    [2] 150995
+                   total        used        free      shared  buff/cache   available
+    Mem:            7899        2502        3953          69        1780        5396
+    Swap:           8191           0        8191
+                   total        used        free      shared  buff/cache   available
+    Mem:            7899        2758        3696          69        1780        5140
+    Swap:           8191           0        8191
+    [1]-  Done                    free -m && ./memory-user 256 2
+    [2]+  Done                    { sleep 2 && free -m; }
+                   total        used        free      shared  buff/cache   available
+    Mem:            7899        2510        3945          69        1780        5389
+    Swap:           8191           0        8191
+
+As expected, when memory-user is running, used memory increases while free and
+available memory decrease, all by approximately 256 MiB; the other columns
+remain constant. This illustrates how memory is consumed by the process. The
+figures don't work out perfectly because there are other processes running on
+the system. Once the process finishes, used memory decreases while free and
+available memory increase by the expected amount, reflecting how memory is
+released.
+
+If enough space is requested in the above command (tweaking the sleep times as
+required), swap space will eventually be consumed. If more memory is requested
+than is available in both RAM and swap space, then memory-user will fail due
+to a memory allocation error.
