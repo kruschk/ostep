@@ -1,0 +1,32 @@
+Valgrind produces the following output, making it clear where the issue
+occurred (in the main routine, line 6) and why (we attempted to write to an
+invalid memory location):
+
+    $ valgrind --tool=memcheck --leak-check=full ./code1
+    ==162879== Memcheck, a memory error detector
+    ==162879== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+    ==162879== Using Valgrind-3.24.0 and LibVEX; rerun with -h for copyright info
+    ==162879== Command: ./code1
+    ==162879==
+    ==162879== Invalid write of size 4
+    ==162879==    at 0x109129: main (code1.c:7)
+    ==162879==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+    ==162879==
+    ==162879==
+    ==162879== Process terminating with default action of signal 11 (SIGSEGV): dumping core
+    ==162879==  Access not within mapped region at address 0x0
+    ==162879==    at 0x109129: main (code1.c:7)
+    ==162879==  If you believe this happened as a result of a stack
+    ==162879==  overflow in your program's main thread (unlikely but
+    ==162879==  possible), you can try to increase the size of the
+    ==162879==  main thread stack using the --main-stacksize= flag.
+    ==162879==  The main thread stack size used in this run was 8388608.
+    ==162879==
+    ==162879== HEAP SUMMARY:
+    ==162879==     in use at exit: 0 bytes in 0 blocks
+    ==162879==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+    ==162879==
+    ==162879== All heap blocks were freed -- no leaks are possible
+    ==162879==
+    ==162879== For lists of detected and suppressed errors, rerun with: -s
+    ==162879== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

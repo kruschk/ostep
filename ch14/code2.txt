@@ -1,0 +1,8 @@
+The segmentation fault still occurs, but GDB provides more information about
+what caused it:
+
+    $ gdb ./code1
+    [...]
+    Program received signal SIGSEGV, Segmentation fault.
+    0x0000555555555129 in main () at code1.c:7
+    7           *pointer = 0;
