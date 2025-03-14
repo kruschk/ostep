@@ -1,0 +1,50 @@
+Consider the following simulations:
+
+    $ ./relocation.py -a 8m -c -p 8g
+
+    ARG seed 0
+    ARG address space size 8m
+    ARG phys mem size 8g
+
+    Base-and-Bounds register information:
+
+      Base   : 0x184129978 (decimal 6510778744)
+      Limit  : 3868032
+
+    Virtual Address Trace
+      VA  0: 0x0035d54a (decimal: 3528010) --> VALID: 0x184486ec2 (decimal: 6514306754)
+      VA  1: 0x0021242f (decimal: 2171951) --> VALID: 0x18433bda7 (decimal: 6512950695)
+      VA  2: 0x00417173 (decimal: 4288883) --> SEGMENTATION VIOLATION
+      VA  3: 0x0033d4e1 (decimal: 3396833) --> VALID: 0x184466e59 (decimal: 6514175577)
+      VA  4: 0x00645383 (decimal: 6574979) --> SEGMENTATION VIOLATION
+
+    $ ./relocation.py -a 1m -c -p 1m
+
+    ARG seed 0
+    ARG address space size 1m
+    ARG phys mem size 1m
+
+    Error: physical memory size must be GREATER than address space size (for this simulation)
+
+    $ ./relocation.py -a 8m -c -l 100 -n 10 -p 8g
+
+    ARG seed 0
+    ARG address space size 8m
+    ARG phys mem size 8g
+
+    Base-and-Bounds register information:
+
+      Base   : 0x1b0580f98 (decimal 7253528472)
+      Limit  : 100
+
+    Virtual Address Trace
+      VA  0: 0x006104a6 (decimal: 6358182) --> SEGMENTATION VIOLATION
+      VA  1: 0x0035d54a (decimal: 3528010) --> SEGMENTATION VIOLATION
+      VA  2: 0x0021242f (decimal: 2171951) --> SEGMENTATION VIOLATION
+      VA  3: 0x00417173 (decimal: 4288883) --> SEGMENTATION VIOLATION
+      VA  4: 0x0033d4e1 (decimal: 3396833) --> SEGMENTATION VIOLATION
+      VA  5: 0x00645383 (decimal: 6574979) --> SEGMENTATION VIOLATION
+      VA  6: 0x0026d2f3 (decimal: 2544371) --> SEGMENTATION VIOLATION
+      VA  7: 0x003d0121 (decimal: 3997985) --> SEGMENTATION VIOLATION
+      VA  8: 0x004aac43 (decimal: 4893763) --> SEGMENTATION VIOLATION
+      VA  9: 0x00743d0b (decimal: 7617803) --> SEGMENTATION VIOLATION

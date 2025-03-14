@@ -1,0 +1,38 @@
+The simulation produces the following output:
+
+    $ ./relocation.py -c -l 100 -n 10 -s 1
+
+    ARG seed 1
+    ARG address space size 1k
+    ARG phys mem size 16k
+
+    Base-and-Bounds register information:
+
+      Base   : 0x00000899 (decimal 2201)
+      Limit  : 100
+
+    Virtual Address Trace
+      VA  0: 0x00000363 (decimal:  867) --> SEGMENTATION VIOLATION
+      VA  1: 0x0000030e (decimal:  782) --> SEGMENTATION VIOLATION
+      VA  2: 0x00000105 (decimal:  261) --> SEGMENTATION VIOLATION
+      VA  3: 0x000001fb (decimal:  507) --> SEGMENTATION VIOLATION
+      VA  4: 0x000001cc (decimal:  460) --> SEGMENTATION VIOLATION
+      VA  5: 0x0000029b (decimal:  667) --> SEGMENTATION VIOLATION
+      VA  6: 0x00000327 (decimal:  807) --> SEGMENTATION VIOLATION
+      VA  7: 0x00000060 (decimal:   96) --> VALID: 0x000008f9 (decimal: 2297)
+      VA  8: 0x0000001d (decimal:   29) --> VALID: 0x000008b6 (decimal: 2230)
+      VA  9: 0x00000357 (decimal:  855) --> SEGMENTATION VIOLATION
+
+To determine the maximum base value, note that the following inequality must
+hold for some base 0 <= b, virtual address 0 <= v < l, and physical memory
+capacity c:
+
+    b + v < c
+
+Rearranging and substituting, noting that the largest possible value that v
+may take is l - 1, yields:
+
+    b < c - v = c - l + 1 = 16 ki - 100 + 1 = 16384 - 100 + 1 = 16285
+
+From which we can clearly see that the maximum value to which we can set the
+base is 16284.
