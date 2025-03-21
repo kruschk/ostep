@@ -1,0 +1,55 @@
+There are many combinations of simulator settings that will achive the desired
+result, but the main requirement is to configure the base and bounds registers
+such that the segments together cover 90 % of the total address space. For
+example, consider running the simulation with varying seed values as follows:
+
+    $ for seed in {0..15}
+      do
+          segmentation.py --b0 0 --b1 100 --l0 45 --l1 45 -a 100 -c -s $i \
+          | grep -Fc 'VIOLATION'
+      done
+    14
+    15
+    14
+    9
+    8
+    8
+    9
+    10
+    11
+    8
+    13
+    10
+    10
+    6
+    10
+    11
+
+The number of violations hovers around 10, or 10 % since there are 100
+possible virtual addresses, meaning that 90 % of the memory accesses are
+valid. This is because the limit registers cover 90 % of the total address
+space
+
+    l0 + l1 / a = (45 + 45) / 100 = 90 / 100 = 90 %,
+
+and the base registers are configured such that the two segments do not
+overlap:
+
+    b0 + l0 <= b1 - l1
+    0 + 45 <= 100 - 45
+    45 <= 55.
+
+As another (more contrived) example, the following settings achieve a similar
+result:
+
+    $ segmentation.py --b0 5 --b1 95 --l0 40 --l1 50 -a 100 -c
+
+because
+
+    l0 + l1 / a = (40 + 50) / 100 = 90 / 100 = 90 %
+
+and
+
+    b0 + l0 <= b1 - l1
+    5 + 40 <= 95 - 50
+    45 <= 45.

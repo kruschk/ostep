@@ -1,0 +1,187 @@
+################################################################################
+# Seed 0
+################################################################################
+
+Problem
+
+    $ ./segmentation.py -B 512 -L 20 -a 128 -b 0 -l 20 -p 512 -s 0
+    ARG seed 0
+    ARG address space size 128
+    ARG phys mem size 512
+
+    Segment register information:
+
+      Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+      Segment 0 limit                  : 20
+
+      Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+      Segment 1 limit                  : 20
+
+    Virtual Address Trace
+      VA  0: 0x0000006c (decimal:  108) --> PA or segmentation violation?
+      VA  1: 0x00000061 (decimal:   97) --> PA or segmentation violation?
+      VA  2: 0x00000035 (decimal:   53) --> PA or segmentation violation?
+      VA  3: 0x00000021 (decimal:   33) --> PA or segmentation violation?
+      VA  4: 0x00000041 (decimal:   65) --> PA or segmentation violation?
+
+    For each virtual address, either write down the physical address it translates to
+    OR write down that it is an out-of-bounds address (a segmentation violation). For
+    this problem, you should assume a simple address space with two segments: the top
+    bit of the virtual address can thus be used to check whether the virtual address
+    is in segment 0 (topbit=0) or segment 1 (topbit=1). Note that the base/limit pairs
+    given to you grow in different directions, depending on the segment, i.e., segment 0
+    grows in the positive direction, whereas segment 1 in the negative. 
+
+Solution
+
+    0: virtual = 0x6c = 0b0110 1100
+       segment = 1
+       offset1 = 0b0010 1100 = 44
+       offset2 = 44 - 64 = -20
+       |offset2| = |-20| = 20 <= 20
+       physical = 512 - 20 = 492
+    1: virtual = 0x61 = 0b0110 0001
+       segment = 1
+       offset1 = 33
+       offset2 = 33 - 64 = -31
+       |offset2| = |-31| = 31 > 20
+       SEGMENTATION VIOLATION (SEG1)
+    2: virtual = 0x35 = 0b0011 0101
+       segment = 0
+       offset = 0b0001 0101 = 21 > 20
+       SEGMENTATION VIOLATION (SEG0)
+    3: virtual = 0x21 = 0b0010 0001
+       segment = 0
+       offset = 0b0010 0001 = 0x21 = 33 > 20
+       SEGMENTATION VIOLATION (SEG0)
+    4: virtual = 0x41 = 0b0100 0001
+       segment = 1
+       offset1 = 1
+       offset2 = 1 - 64 = -63
+       |offset2| = |-63| = 63 > 20
+       SEGMENTATION VIOLATION (SEG1)
+
+################################################################################
+# Seed 1
+################################################################################
+
+Problem
+
+    $ ./segmentation.py -B 512 -L 20 -a 128 -b 0 -l 20 -p 512 -s 1
+    ARG seed 1
+    ARG address space size 128
+    ARG phys mem size 512
+
+    Segment register information:
+
+      Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+      Segment 0 limit                  : 20
+
+      Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+      Segment 1 limit                  : 20
+
+    Virtual Address Trace
+      VA  0: 0x00000011 (decimal:   17) --> PA or segmentation violation?
+      VA  1: 0x0000006c (decimal:  108) --> PA or segmentation violation?
+      VA  2: 0x00000061 (decimal:   97) --> PA or segmentation violation?
+      VA  3: 0x00000020 (decimal:   32) --> PA or segmentation violation?
+      VA  4: 0x0000003f (decimal:   63) --> PA or segmentation violation?
+
+    For each virtual address, either write down the physical address it translates to
+    OR write down that it is an out-of-bounds address (a segmentation violation). For
+    this problem, you should assume a simple address space with two segments: the top
+    bit of the virtual address can thus be used to check whether the virtual address
+    is in segment 0 (topbit=0) or segment 1 (topbit=1). Note that the base/limit pairs
+    given to you grow in different directions, depending on the segment, i.e., segment 0
+    grows in the positive direction, whereas segment 1 in the negative. 
+
+Solution
+
+    0: virtual = 0x11 = 0b0001 0001
+       segment = 0
+       offset = 17 < 20
+       physical = 0 + 17 = 17
+    1: virtual = 0x6c = 0b0110 1100
+       segment = 1
+       offset1 = 0b0010 1100 = 44
+       offset2 = 44 - 64 = -20
+       |offset2| = |-20| = 20 <= 20
+       physical = 512 - 20 = 492
+    2: virtual = 0x61 = 0b0110 0001
+       segment = 1
+       offset1 = 0b0010 0001 = 33
+       offset2 = 33 - 64 = -31
+       |offset2| = |-31| = 31 > 20
+       SEGMENTATION VIOLATION (SEG1)
+    3: virtual = 0x20 = 0b0010 0000
+       segment = 0
+       offset = 0b0010 0000 = 0x20 = 32 > 20
+       SEGMENTATION VIOLATION (SEG0)
+    4: virtual = 0x3f = 0b0011 1111
+       segment = 0
+       offset = 0b0011 1111 = 63 > 20
+       SEGMENTATION VIOLATION (SEG0)
+
+################################################################################
+# Seed 2
+################################################################################
+
+Problem
+
+    $ ./segmentation.py -B 512 -L 20 -a 128 -b 0 -l 20 -p 512 -s 2
+    ARG seed 2
+    ARG address space size 128
+    ARG phys mem size 512
+
+    Segment register information:
+
+      Segment 0 base  (grows positive) : 0x00000000 (decimal 0)
+      Segment 0 limit                  : 20
+
+      Segment 1 base  (grows negative) : 0x00000200 (decimal 512)
+      Segment 1 limit                  : 20
+
+    Virtual Address Trace
+      VA  0: 0x0000007a (decimal:  122) --> PA or segmentation violation?
+      VA  1: 0x00000079 (decimal:  121) --> PA or segmentation violation?
+      VA  2: 0x00000007 (decimal:    7) --> PA or segmentation violation?
+      VA  3: 0x0000000a (decimal:   10) --> PA or segmentation violation?
+      VA  4: 0x0000006a (decimal:  106) --> PA or segmentation violation?
+
+    For each virtual address, either write down the physical address it translates to
+    OR write down that it is an out-of-bounds address (a segmentation violation). For
+    this problem, you should assume a simple address space with two segments: the top
+    bit of the virtual address can thus be used to check whether the virtual address
+    is in segment 0 (topbit=0) or segment 1 (topbit=1). Note that the base/limit pairs
+    given to you grow in different directions, depending on the segment, i.e., segment 0
+    grows in the positive direction, whereas segment 1 in the negative. 
+
+
+Solution
+
+    0: virtual = 0x7a = 0b0111 1010
+       segment = 1
+       offset1 = 0b0011 1010 = 0x3a = 58
+       offset2 = 58 - 64 = -6
+       |offset2| = |-6| = 6 <= 20
+       physical = 512 - 6 = 506
+    1: virtual = 0x79 = 0b0111 1001
+       segment = 1
+       offset1 = 0b0011 1001 = 0x39 = 57
+       offset2 = 57 - 64 = -7
+       |offset2| = |-7| = 7 <= 20
+       physical = 512 - 7 = 505
+    2: virtual = 0x07 = 0b0000 0111
+       segment = 0
+       offset = 0b0000 0111 = 7 < 20
+       physical = 0 + 7 = 7
+    3: virtual = 0x0a = 0b0000 1010
+       segment = 0
+       offset = 0b0000 1010 = 0x0a = 10
+       physical = 0 + 10 = 10
+    4: virtual = 0x6a = 0b0110 1010
+       segment = 1
+       offset1 = 0b0010 1010 = 0x2a = 42
+       offset2 = 42 - 64 = -22
+       |offset2| = |-22| = 22 > 20
+       SEGMENTATION VIOLATION (SEG1)
