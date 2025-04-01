@@ -1,0 +1,56 @@
+The free list evolves as follows:
+
+    $ ./malloc.py -H 0 -n 10 -p BEST -s 0
+    seed 0
+    size 100
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy BEST
+    listOrder ADDRSORT
+    coalesce False
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList
+    compute False
+    [...]
+
+    ptr[0] = Alloc(3) returned 1000
+    List = [(1003, 97)]
+
+    Free(ptr[0])
+    returned 0
+    List = [(1000, 3), (1003, 97)]
+
+    ptr[1] = Alloc(5) returned 1003
+    List = [(1000, 3), (1008, 92)]
+
+    Free(ptr[1])
+    returned 0
+    List = [(1000, 3), (1003, 5), (1008, 92)]
+
+    ptr[2] = Alloc(8) returned 1008
+    List = [(1000, 3), (1003, 5), (10016, 84)]
+
+    Free(ptr[2])
+    returned 0
+    List = [(1000, 3), (1003, 5), (1008, 8), (10016, 84)]
+
+    ptr[3] = Alloc(8) returned 1008
+    List = [(1000, 3), (1003, 5), (10016, 84)]
+
+    Free(ptr[3])
+    returned 0
+    List = [(1000, 3), (1003, 5), (1008, 8), (10016, 84)]
+
+    ptr[4] = Alloc(2) returned 1000
+    List = [(1002, 1), (1003, 5), (1008, 8), (10016, 84)]
+
+    ptr[5] = Alloc(7) returned 1008
+    List = [(1002, 1), (1003, 5), (1015, 1), (10016, 84)]
+
+We can observe that, due to the lack of coalescing, the free list becomes
+externally fragmented over time. Further, the best-fit strategy has to search
+through more nodes to find the best one as the free list becomes more
+fragmented.

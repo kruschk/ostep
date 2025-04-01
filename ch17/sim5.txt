@@ -1,0 +1,34 @@
+Consider a simulation with a large number of requests without coalescence:
+
+    $ ./malloc.py --compute \
+                  --headerSize=0 \
+                  --listOrder=ADDRSORT \
+                  --numOps=1000 \
+                  --policy=BEST \
+                  --seed=0
+
+The lack of coalescence means that large chunks of free memory tend to be
+split into smaller chunks without ever returning to a larger size. Because of
+this, the heap quickly becomes so fragmented that the allocator cannot satisfy
+large requests. This also means that the free list becomes quite large,
+forcing the allocator to search more free chunks. With a large number of
+requests, the ordering of the list does not appear to have a significant
+impact on the degree of fragmentation.
+
+Compare this to a simulation that does coalesce chunks:
+
+    $ ./malloc.py --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=ADDRSORT \
+                  --numOps=1000 \
+                  --policy=BEST \
+                  --seed=0
+
+In this case, because adjacent free chunks of memory are coalesced, the free
+list does not become nearly as fragmented. More large chunks of memory are
+likely to be available, and as a result very few allocation requests fail. The
+free list also tends to remain very small (due to the reduced fragmentation),
+meaning that the allocator has to search fewer chunks. List ordering does
+appear to matter; sorting the free list by size (ascending or descending)
+leads to fragmentation similar to the non-coalescing simulations.

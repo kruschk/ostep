@@ -1,0 +1,214 @@
+When we set the allocation fraction above 50 %, the requests eventually
+exhaust all available memory, as none is ever freed. This is most evident when
+the fraction is set to 100 %:
+
+    $ ./malloc.py --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=ADDRSORT \
+                  --numOps=25 \
+                  --percentAlloc=100 \
+                  --policy=BEST \
+                  --seed=0
+    seed 0
+    size 100
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy BEST
+    listOrder ADDRSORT
+    coalesce True
+    numOps 25
+    range 10
+    percentAlloc 100
+    allocList
+    compute True
+
+    ptr[0] = Alloc(8) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:92 ]
+
+    ptr[1] = Alloc(3) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1011 sz:89 ]
+
+    ptr[2] = Alloc(5) returned 1011 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1016 sz:84 ]
+
+    ptr[3] = Alloc(4) returned 1016 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1020 sz:80 ]
+
+    ptr[4] = Alloc(6) returned 1020 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1026 sz:74 ]
+
+    ptr[5] = Alloc(6) returned 1026 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1032 sz:68 ]
+
+    ptr[6] = Alloc(8) returned 1032 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1040 sz:60 ]
+
+    ptr[7] = Alloc(3) returned 1040 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1043 sz:57 ]
+
+    ptr[8] = Alloc(10) returned 1043 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1053 sz:47 ]
+
+    ptr[9] = Alloc(10) returned 1053 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1063 sz:37 ]
+
+    ptr[10] = Alloc(8) returned 1063 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1071 sz:29 ]
+
+    ptr[11] = Alloc(7) returned 1071 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1078 sz:22 ]
+
+    ptr[12] = Alloc(2) returned 1078 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1080 sz:20 ]
+
+    ptr[13] = Alloc(7) returned 1080 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1087 sz:13 ]
+
+    ptr[14] = Alloc(10) returned 1087 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1097 sz:3 ]
+
+    ptr[15] = Alloc(9) returned -1 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1097 sz:3 ]
+
+    ptr[16] = Alloc(9) returned -1 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1097 sz:3 ]
+
+    ptr[17] = Alloc(1) returned 1097 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1098 sz:2 ]
+
+    ptr[18] = Alloc(4) returned -1 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1098 sz:2 ]
+
+    ptr[19] = Alloc(7) returned -1 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1098 sz:2 ]
+
+    ptr[20] = Alloc(5) returned -1 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1098 sz:2 ]
+
+    ptr[21] = Alloc(3) returned -1 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1098 sz:2 ]
+
+    ptr[22] = Alloc(9) returned -1 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1098 sz:2 ]
+
+    ptr[23] = Alloc(6) returned -1 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1098 sz:2 ]
+
+    ptr[24] = Alloc(10) returned -1 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1098 sz:2 ]
+
+On the other hand, with an allocation fraction near 0, every allocation has a
+corresponding free, preventing any opportunities for memory exhaustion or
+fragmentation.
+
+    $ ./malloc.py --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=ADDRSORT \
+                  --numOps=25 \
+                  --percentAlloc=1 \
+                  --policy=BEST \
+                  --seed=0
+    seed 0
+    size 100
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy BEST
+    listOrder ADDRSORT
+    coalesce True
+    numOps 25
+    range 10
+    percentAlloc 1
+    allocList
+    compute True
+
+    ptr[0] = Alloc(5) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:95 ]
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[1] = Alloc(2) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:98 ]
+
+    Free(ptr[1])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[2] = Alloc(9) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:91 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[3] = Alloc(2) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:98 ]
+
+    Free(ptr[3])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[4] = Alloc(4) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:96 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[5] = Alloc(2) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:98 ]
+
+    Free(ptr[5])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[6] = Alloc(10) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1010 sz:90 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[7] = Alloc(4) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:96 ]
+
+    Free(ptr[7])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[8] = Alloc(7) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:93 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[9] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:99 ]
+
+    Free(ptr[9])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[10] = Alloc(7) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:93 ]
+
+    Free(ptr[10])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[11] = Alloc(2) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:98 ]
+
+    Free(ptr[11])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:100 ]
+
+    ptr[12] = Alloc(9) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:91 ]
+

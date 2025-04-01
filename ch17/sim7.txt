@@ -1,0 +1,670 @@
+There are many ways to fragment memory, and how effective these techniques are
+depends primarily on coalescence, free list order, and search strategy. One
+simple approach that is robust with respect to these parameters is to allocate
+many small chunks and then free the evenly-numbered ones:
+
+Best-fit, address order:
+
+    $ ./malloc.py --allocList=+1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8 \
+                  --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=ADDRSORT \
+                  --policy=BEST \
+                  --seed=0 \
+                  --size=10
+    seed 0
+    size 10
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy BEST
+    listOrder ADDRSORT
+    coalesce True
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList +1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8
+    compute True
+
+    ptr[0] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:9 ]
+
+    ptr[1] = Alloc(1) returned 1001 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:8 ]
+
+    ptr[2] = Alloc(1) returned 1002 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1003 sz:7 ]
+
+    ptr[3] = Alloc(1) returned 1003 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:6 ]
+
+    ptr[4] = Alloc(1) returned 1004 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:5 ]
+
+    ptr[5] = Alloc(1) returned 1005 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1006 sz:4 ]
+
+    ptr[6] = Alloc(1) returned 1006 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:3 ]
+
+    ptr[7] = Alloc(1) returned 1007 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:2 ]
+
+    ptr[8] = Alloc(1) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:1 ]
+
+    ptr[9] = Alloc(1) returned 1009 (searched 1 elements)
+    Free List [ Size 0 ]:
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:1 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 2 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 3 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 4 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 5 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ][ addr:1008 sz:1 ]
+
+Best-fit, address order (ascending):
+
+    $ ./malloc.py --allocList=+1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8 \
+                  --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=SIZESORT+ \
+                  --policy=BEST \
+                  --seed=0 \
+                  --size=10
+    seed 0
+    size 10
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy BEST
+    listOrder SIZESORT+
+    coalesce True
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList +1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8
+    compute True
+
+    ptr[0] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:9 ]
+
+    ptr[1] = Alloc(1) returned 1001 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:8 ]
+
+    ptr[2] = Alloc(1) returned 1002 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1003 sz:7 ]
+
+    ptr[3] = Alloc(1) returned 1003 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:6 ]
+
+    ptr[4] = Alloc(1) returned 1004 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:5 ]
+
+    ptr[5] = Alloc(1) returned 1005 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1006 sz:4 ]
+
+    ptr[6] = Alloc(1) returned 1006 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:3 ]
+
+    ptr[7] = Alloc(1) returned 1007 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:2 ]
+
+    ptr[8] = Alloc(1) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:1 ]
+
+    ptr[9] = Alloc(1) returned 1009 (searched 1 elements)
+    Free List [ Size 0 ]:
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:1 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 2 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 3 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 4 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 5 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ][ addr:1008 sz:1 ]
+
+Best-fit, address order (descending):
+
+    $ ./malloc.py --allocList=+1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8 \
+                  --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=SIZESORT- \
+                  --policy=BEST \
+                  --seed=0 \
+                  --size=10
+    seed 0
+    size 10
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy BEST
+    listOrder SIZESORT-
+    coalesce True
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList +1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8
+    compute True
+
+    ptr[0] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:9 ]
+
+    ptr[1] = Alloc(1) returned 1001 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:8 ]
+
+    ptr[2] = Alloc(1) returned 1002 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1003 sz:7 ]
+
+    ptr[3] = Alloc(1) returned 1003 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:6 ]
+
+    ptr[4] = Alloc(1) returned 1004 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:5 ]
+
+    ptr[5] = Alloc(1) returned 1005 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1006 sz:4 ]
+
+    ptr[6] = Alloc(1) returned 1006 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:3 ]
+
+    ptr[7] = Alloc(1) returned 1007 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:2 ]
+
+    ptr[8] = Alloc(1) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:1 ]
+
+    ptr[9] = Alloc(1) returned 1009 (searched 1 elements)
+    Free List [ Size 0 ]:
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:1 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 2 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 3 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 4 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 5 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ][ addr:1008 sz:1 ]
+
+First-fit, address order:
+
+    $ ./malloc.py --allocList=+1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8 \
+                  --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=ADDRSORT \
+                  --policy=FIRST \
+                  --seed=0 \
+                  --size=10
+    seed 0
+    size 10
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy FIRST
+    listOrder ADDRSORT
+    coalesce True
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList +1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8
+    compute True
+
+    ptr[0] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:9 ]
+
+    ptr[1] = Alloc(1) returned 1001 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:8 ]
+
+    ptr[2] = Alloc(1) returned 1002 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1003 sz:7 ]
+
+    ptr[3] = Alloc(1) returned 1003 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:6 ]
+
+    ptr[4] = Alloc(1) returned 1004 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:5 ]
+
+    ptr[5] = Alloc(1) returned 1005 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1006 sz:4 ]
+
+    ptr[6] = Alloc(1) returned 1006 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:3 ]
+
+    ptr[7] = Alloc(1) returned 1007 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:2 ]
+
+    ptr[8] = Alloc(1) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:1 ]
+
+    ptr[9] = Alloc(1) returned 1009 (searched 1 elements)
+    Free List [ Size 0 ]:
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:1 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 2 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 3 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 4 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 5 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ][ addr:1008 sz:1 ]
+
+First-fit, size order (ascending):
+
+    $ ./malloc.py --allocList=+1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8 \
+                  --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=SIZESORT+ \
+                  --policy=FIRST \
+                  --seed=0 \
+                  --size=10
+    seed 0
+    size 10
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy FIRST
+    listOrder SIZESORT+
+    coalesce True
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList +1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8
+    compute True
+
+    ptr[0] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:9 ]
+
+    ptr[1] = Alloc(1) returned 1001 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:8 ]
+
+    ptr[2] = Alloc(1) returned 1002 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1003 sz:7 ]
+
+    ptr[3] = Alloc(1) returned 1003 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:6 ]
+
+    ptr[4] = Alloc(1) returned 1004 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:5 ]
+
+    ptr[5] = Alloc(1) returned 1005 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1006 sz:4 ]
+
+    ptr[6] = Alloc(1) returned 1006 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:3 ]
+
+    ptr[7] = Alloc(1) returned 1007 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:2 ]
+
+    ptr[8] = Alloc(1) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:1 ]
+
+    ptr[9] = Alloc(1) returned 1009 (searched 1 elements)
+    Free List [ Size 0 ]:
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:1 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 2 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 3 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 4 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 5 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ][ addr:1008 sz:1 ]
+
+First-fit, size order (descending):
+
+    $ ./malloc.py --allocList=+1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8 \
+                  --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=SIZESORT- \
+                  --policy=FIRST \
+                  --seed=0 \
+                  --size=10
+    seed 0
+    size 10
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy FIRST
+    listOrder SIZESORT-
+    coalesce True
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList +1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8
+    compute True
+
+    ptr[0] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:9 ]
+
+    ptr[1] = Alloc(1) returned 1001 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:8 ]
+
+    ptr[2] = Alloc(1) returned 1002 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1003 sz:7 ]
+
+    ptr[3] = Alloc(1) returned 1003 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:6 ]
+
+    ptr[4] = Alloc(1) returned 1004 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:5 ]
+
+    ptr[5] = Alloc(1) returned 1005 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1006 sz:4 ]
+
+    ptr[6] = Alloc(1) returned 1006 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:3 ]
+
+    ptr[7] = Alloc(1) returned 1007 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:2 ]
+
+    ptr[8] = Alloc(1) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:1 ]
+
+    ptr[9] = Alloc(1) returned 1009 (searched 1 elements)
+    Free List [ Size 0 ]:
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:1 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 2 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 3 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 4 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 5 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ][ addr:1008 sz:1 ]
+
+Worst-fit, address order:
+
+    $ ./malloc.py --allocList=+1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8 \
+                  --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=ADDRSORT \
+                  --policy=WORST \
+                  --seed=0 \
+                  --size=10
+    seed 0
+    size 10
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy WORST
+    listOrder ADDRSORT
+    coalesce True
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList +1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8
+    compute True
+
+    ptr[0] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:9 ]
+
+    ptr[1] = Alloc(1) returned 1001 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:8 ]
+
+    ptr[2] = Alloc(1) returned 1002 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1003 sz:7 ]
+
+    ptr[3] = Alloc(1) returned 1003 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:6 ]
+
+    ptr[4] = Alloc(1) returned 1004 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:5 ]
+
+    ptr[5] = Alloc(1) returned 1005 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1006 sz:4 ]
+
+    ptr[6] = Alloc(1) returned 1006 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:3 ]
+
+    ptr[7] = Alloc(1) returned 1007 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:2 ]
+
+    ptr[8] = Alloc(1) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:1 ]
+
+    ptr[9] = Alloc(1) returned 1009 (searched 1 elements)
+    Free List [ Size 0 ]:
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:1 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 2 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 3 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 4 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 5 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ][ addr:1008 sz:1 ]
+
+Worst-fit, size order (ascending):
+
+    $ ./malloc.py --allocList=+1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8 \
+                  --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=SIZESORT+ \
+                  --policy=WORST \
+                  --seed=0 \
+                  --size=10
+    seed 0
+    size 10
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy WORST
+    listOrder SIZESORT+
+    coalesce True
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList +1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8
+    compute True
+
+    ptr[0] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:9 ]
+
+    ptr[1] = Alloc(1) returned 1001 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:8 ]
+
+    ptr[2] = Alloc(1) returned 1002 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1003 sz:7 ]
+
+    ptr[3] = Alloc(1) returned 1003 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:6 ]
+
+    ptr[4] = Alloc(1) returned 1004 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:5 ]
+
+    ptr[5] = Alloc(1) returned 1005 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1006 sz:4 ]
+
+    ptr[6] = Alloc(1) returned 1006 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:3 ]
+
+    ptr[7] = Alloc(1) returned 1007 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:2 ]
+
+    ptr[8] = Alloc(1) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:1 ]
+
+    ptr[9] = Alloc(1) returned 1009 (searched 1 elements)
+    Free List [ Size 0 ]:
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:1 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 2 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 3 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 4 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 5 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ][ addr:1008 sz:1 ]
+
+Worst-fit, size order (descending):
+
+    $ ./malloc.py --allocList=+1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8 \
+                  --coalesce \
+                  --compute \
+                  --headerSize=0 \
+                  --listOrder=SIZESORT- \
+                  --policy=WORST \
+                  --seed=0 \
+                  --size=10
+    seed 0
+    size 10
+    baseAddr 1000
+    headerSize 0
+    alignment -1
+    policy WORST
+    listOrder SIZESORT-
+    coalesce True
+    numOps 10
+    range 10
+    percentAlloc 50
+    allocList +1,+1,+1,+1,+1,+1,+1,+1,+1,+1,-0,-2,-4,-6,-8
+    compute True
+
+    ptr[0] = Alloc(1) returned 1000 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1001 sz:9 ]
+
+    ptr[1] = Alloc(1) returned 1001 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1002 sz:8 ]
+
+    ptr[2] = Alloc(1) returned 1002 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1003 sz:7 ]
+
+    ptr[3] = Alloc(1) returned 1003 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1004 sz:6 ]
+
+    ptr[4] = Alloc(1) returned 1004 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1005 sz:5 ]
+
+    ptr[5] = Alloc(1) returned 1005 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1006 sz:4 ]
+
+    ptr[6] = Alloc(1) returned 1006 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1007 sz:3 ]
+
+    ptr[7] = Alloc(1) returned 1007 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1008 sz:2 ]
+
+    ptr[8] = Alloc(1) returned 1008 (searched 1 elements)
+    Free List [ Size 1 ]: [ addr:1009 sz:1 ]
+
+    ptr[9] = Alloc(1) returned 1009 (searched 1 elements)
+    Free List [ Size 0 ]:
+
+    Free(ptr[0])
+    returned 0
+    Free List [ Size 1 ]: [ addr:1000 sz:1 ]
+
+    Free(ptr[2])
+    returned 0
+    Free List [ Size 2 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ]
+
+    Free(ptr[4])
+    returned 0
+    Free List [ Size 3 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ]
+
+    Free(ptr[6])
+    returned 0
+    Free List [ Size 4 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ]
+
+    Free(ptr[8])
+    returned 0
+    Free List [ Size 5 ]: [ addr:1000 sz:1 ][ addr:1002 sz:1 ][ addr:1004 sz:1 ][ addr:1006 sz:1 ][ addr:1008 sz:1 ]
