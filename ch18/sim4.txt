@@ -1,0 +1,32 @@
+After playing with the program for a little while, certain limitations become
+clear. Trying to specify a page size larger than the address space is
+disallowed:
+
+    $ ./paging-linear-translate.py --asize=4096 --pagesize=8192 --physmem=8192 --seed=0 -c -v
+    ARG seed 0
+    ARG address space size 4096
+    ARG phys mem size 8192
+    ARG page size 8192
+    ARG verbose True
+    ARG addresses -1
+
+    Error in argument: address space must be a multiple of the pagesize
+
+In principle, this situation is possible, as the entire address space could be
+placed on a single page.
+
+Despite being a realistic scenario, specifying an address space larger than
+physical memory is also not allowed:
+
+    $ ./paging-linear-translate.py --asize=8192 --pagesize=128 --physmem=4096 --seed=0 -c -v
+    ARG seed 0
+    ARG address space size 8192
+    ARG phys mem size 4096
+    ARG page size 128
+    ARG verbose True
+    ARG addresses -1
+
+    Error: physical memory size must be GREATER than address space size (for this simulation)
+
+This is problematic because having a larger address space than physical memory
+is very common, especially for 64-bit machines / operating systems.

@@ -1,0 +1,420 @@
+Translations for the each simulation are given below:
+
+    $ ./paging-linear-translate.py --asize=32 --pagesize=8 --physmem=1024 \
+                                   --seed=1 -v
+    ARG seed 1
+    ARG address space size 32
+    ARG phys mem size 1024
+    ARG page size 8
+    ARG verbose True
+    ARG addresses -1
+
+
+    The format of the page table is simple:
+    The high-order (left-most) bit is the VALID bit.
+      If the bit is 1, the rest of the entry is the PFN.
+      If the bit is 0, the page is not valid.
+    Use verbose mode (-v) if you want to print the VPN # by
+    each entry of the page table.
+
+    Page Table (from entry 0 down to the max size)
+      [       0]  0x00000000
+      [       1]  0x80000061
+      [       2]  0x00000000
+      [       3]  0x00000000
+
+    Virtual Address Trace
+      VA 0x0000000e (decimal:       14) --> PA or invalid address?
+      VA 0x00000014 (decimal:       20) --> PA or invalid address?
+      VA 0x00000019 (decimal:       25) --> PA or invalid address?
+      VA 0x00000003 (decimal:        3) --> PA or invalid address?
+      VA 0x00000000 (decimal:        0) --> PA or invalid address?
+
+    For each virtual address, write down the physical address it translates to
+    OR write down that it is an out-of-bounds address (e.g., segfault).
+
+VA = 0x0e = 0b 0000 1110
+VPN = 0b01 = 1, offset = 0b110
+PFN = 0x61 = 0b 0110 0001
+PA = 0b 0011 0000 1110 = 0x030e
+
+VA = 0x14 = 0b 0001 1000
+VPN = 0b11 = 3, offset = 0b000
+The MSB of PTE 3 is 0, so this VA is invalid.
+
+VA = 0x19 = 0b 0001 1001
+VPN = 0b11 = 3, offset = 0b001
+The MSB of PTE 3 is 0, so this VA is invalid.
+
+VA = 0x03 = 0b 0000 0011
+VPN = 0b00 = 0, offset = 0b011
+The MSB of PTE 0 is 0, so this VA is invalid.
+
+VA = 0x00 = 0b 0000 0000
+VPN = 0b00 = 0, offset = 0b000
+The MSB of PTE 0 is 0, so this VA is invalid.
+
+    $ ./paging-linear-translate.py --asize=32 --pagesize=8 --physmem=1024 \
+                                   --seed=1 -v
+    ARG seed 1
+    ARG address space size 32k
+    ARG phys mem size 1m
+    ARG page size 8k
+    ARG verbose True
+    ARG addresses -1
+
+
+    The format of the page table is simple:
+    The high-order (left-most) bit is the VALID bit.
+      If the bit is 1, the rest of the entry is the PFN.
+      If the bit is 0, the page is not valid.
+    Use verbose mode (-v) if you want to print the VPN # by
+    each entry of the page table.
+
+    Page Table (from entry 0 down to the max size)
+      [       0]  0x00000000
+      [       1]  0x80000061
+      [       2]  0x00000000
+      [       3]  0x00000000
+
+    Virtual Address Trace
+      VA 0x00003988 (decimal:    14728) --> PA or invalid address?
+      VA 0x00005367 (decimal:    21351) --> PA or invalid address?
+      VA 0x000064f4 (decimal:    25844) --> PA or invalid address?
+      VA 0x00000c03 (decimal:     3075) --> PA or invalid address?
+      VA 0x000003a0 (decimal:      928) --> PA or invalid address?
+
+    For each virtual address, write down the physical address it translates to
+    OR write down that it is an out-of-bounds address (e.g., segfault).
+
+VA = 0x3988 = 0b 0011 1001 1000 1000
+VPN = 0b01 = 1, offset = 0b 1 1001 1000 1000
+PFN = 0x61 = 0b 0110 0001
+PA = 0b 1100 0011 1001 1000 1000 = 0x 0c 39 88
+
+VA = 0x5367 = 0b 0101 0011 0110 0111
+VPN = 0b10 = 2, offset = 0b 1 0011 0110 0111
+The MSB of PTE 2 is 0, so this VA is invalid.
+
+VA = 0x64f4 = 0b 0110 0100 1111 0100
+VPN = 0b11, offset = 0b0 0100 1111 0100
+The MSB of PTE 3 is 0, so this VA is invalid.
+
+VA = 0x0c03 = 0b 0000 1100 0000 0011
+VPN = 0b00 = 0, offset = 0b 0 1100 0000 0011
+The MSB of PTE 0 is 0, so this VA is invalid.
+
+VA = 0x03a0 = 0b 0000 0011 1010 0000
+VPN = 0b00, offset = 0b 0 0011 1010 0000
+The MSB of PTE 0 is 0, so this VA is invalid.
+
+    $ ./paging-linear-translate.py --asize=256m --pagesize=1m --physmem=512m \
+                                   --seed=1 -v
+    ARG seed 1
+    ARG address space size 256m
+    ARG phys mem size 512m
+    ARG page size 1m
+    ARG verbose True
+    ARG addresses -1
+
+
+    The format of the page table is simple:
+    The high-order (left-most) bit is the VALID bit.
+      If the bit is 1, the rest of the entry is the PFN.
+      If the bit is 0, the page is not valid.
+    Use verbose mode (-v) if you want to print the VPN # by
+    each entry of the page table.
+
+    Page Table (from entry 0 down to the max size)
+      [       0]  0x00000000
+      [       1]  0x80000187
+      [       2]  0x00000000
+      [       3]  0x00000000
+      [       4]  0x00000000
+      [       5]  0x80000193
+      [       6]  0x00000000
+      [       7]  0x00000000
+      [       8]  0x800000dd
+      [       9]  0x80000001
+      [      10]  0x00000000
+      [      11]  0x80000075
+      [      12]  0x800001cd
+      [      13]  0x00000000
+      [      14]  0x00000000
+      [      15]  0x800001e0
+      [      16]  0x00000000
+      [      17]  0x00000000
+      [      18]  0x00000000
+      [      19]  0x00000000
+      [      20]  0x00000000
+      [      21]  0x00000000
+      [      22]  0x00000000
+      [      23]  0x00000000
+      [      24]  0x00000000
+      [      25]  0x00000000
+      [      26]  0x00000000
+      [      27]  0x00000000
+      [      28]  0x00000000
+      [      29]  0x8000011c
+      [      30]  0x8000005f
+      [      31]  0x800001b8
+      [      32]  0x00000000
+      [      33]  0x00000000
+      [      34]  0x8000016c
+      [      35]  0x800000d8
+      [      36]  0x80000157
+      [      37]  0x00000000
+      [      38]  0x800001c3
+      [      39]  0x80000102
+      [      40]  0x80000011
+      [      41]  0x00000000
+      [      42]  0x800000d4
+      [      43]  0x00000000
+      [      44]  0x80000167
+      [      45]  0x800000bf
+      [      46]  0x00000000
+      [      47]  0x8000018e
+      [      48]  0x800000c9
+      [      49]  0x00000000
+      [      50]  0x00000000
+      [      51]  0x00000000
+      [      52]  0x800001f7
+      [      53]  0x00000000
+      [      54]  0x800001f6
+      [      55]  0x80000114
+      [      56]  0x80000076
+      [      57]  0x800001e7
+      [      58]  0x800000eb
+      [      59]  0x00000000
+      [      60]  0x800001ea
+      [      61]  0x00000000
+      [      62]  0x800001a4
+      [      63]  0x8000017b
+      [      64]  0x80000109
+      [      65]  0x800000da
+      [      66]  0x00000000
+      [      67]  0x80000123
+      [      68]  0x00000000
+      [      69]  0x800000f8
+      [      70]  0x00000000
+      [      71]  0x00000000
+      [      72]  0x8000013f
+      [      73]  0x800000ea
+      [      74]  0x00000000
+      [      75]  0x00000000
+      [      76]  0x00000000
+      [      77]  0x80000198
+      [      78]  0x80000082
+      [      79]  0x80000158
+      [      80]  0x00000000
+      [      81]  0x00000000
+      [      82]  0x00000000
+      [      83]  0x8000007f
+      [      84]  0x00000000
+      [      85]  0x800000b0
+      [      86]  0x00000000
+      [      87]  0x00000000
+      [      88]  0x80000056
+      [      89]  0x00000000
+      [      90]  0x800000e8
+      [      91]  0x00000000
+      [      92]  0x00000000
+      [      93]  0x00000000
+      [      94]  0x00000000
+      [      95]  0x00000000
+      [      96]  0x00000000
+      [      97]  0x00000000
+      [      98]  0x80000105
+      [      99]  0x00000000
+      [     100]  0x800001a2
+      [     101]  0x00000000
+      [     102]  0x00000000
+      [     103]  0x00000000
+      [     104]  0x80000052
+      [     105]  0x8000015b
+      [     106]  0x80000070
+      [     107]  0x80000072
+      [     108]  0x800000ca
+      [     109]  0x800000a4
+      [     110]  0x8000001e
+      [     111]  0x00000000
+      [     112]  0x800001c0
+      [     113]  0x00000000
+      [     114]  0x8000009e
+      [     115]  0x8000017c
+      [     116]  0x00000000
+      [     117]  0x00000000
+      [     118]  0x00000000
+      [     119]  0x80000013
+      [     120]  0x800001ec
+      [     121]  0x80000057
+      [     122]  0x800001f2
+      [     123]  0x80000104
+      [     124]  0x00000000
+      [     125]  0x00000000
+      [     126]  0x00000000
+      [     127]  0x00000000
+      [     128]  0x00000000
+      [     129]  0x80000097
+      [     130]  0x00000000
+      [     131]  0x00000000
+      [     132]  0x800001cc
+      [     133]  0x00000000
+      [     134]  0x00000000
+      [     135]  0x00000000
+      [     136]  0x80000190
+      [     137]  0x00000000
+      [     138]  0x00000000
+      [     139]  0x800001ac
+      [     140]  0x8000015f
+      [     141]  0x00000000
+      [     142]  0x80000078
+      [     143]  0x8000002b
+      [     144]  0x00000000
+      [     145]  0x8000006d
+      [     146]  0x80000133
+      [     147]  0x800000bc
+      [     148]  0x00000000
+      [     149]  0x00000000
+      [     150]  0x80000135
+      [     151]  0x800001c6
+      [     152]  0x00000000
+      [     153]  0x80000035
+      [     154]  0x00000000
+      [     155]  0x00000000
+      [     156]  0x800000ae
+      [     157]  0x00000000
+      [     158]  0x00000000
+      [     159]  0x00000000
+      [     160]  0x80000120
+      [     161]  0x00000000
+      [     162]  0x800001a7
+      [     163]  0x00000000
+      [     164]  0x8000002e
+      [     165]  0x00000000
+      [     166]  0x80000014
+      [     167]  0x00000000
+      [     168]  0x800000d7
+      [     169]  0x00000000
+      [     170]  0x00000000
+      [     171]  0x00000000
+      [     172]  0x80000034
+      [     173]  0x800000c1
+      [     174]  0x800001d1
+      [     175]  0x00000000
+      [     176]  0x00000000
+      [     177]  0x00000000
+      [     178]  0x00000000
+      [     179]  0x00000000
+      [     180]  0x800000e6
+      [     181]  0x00000000
+      [     182]  0x00000000
+      [     183]  0x800001f0
+      [     184]  0x80000039
+      [     185]  0x00000000
+      [     186]  0x800001f5
+      [     187]  0x80000160
+      [     188]  0x80000084
+      [     189]  0x8000009d
+      [     190]  0x00000000
+      [     191]  0x00000000
+      [     192]  0x00000000
+      [     193]  0x800000e5
+      [     194]  0x80000149
+      [     195]  0x800000c7
+      [     196]  0x00000000
+      [     197]  0x00000000
+      [     198]  0x00000000
+      [     199]  0x800001c9
+      [     200]  0x00000000
+      [     201]  0x00000000
+      [     202]  0x80000128
+      [     203]  0x8000007d
+      [     204]  0x00000000
+      [     205]  0x00000000
+      [     206]  0x00000000
+      [     207]  0x80000024
+      [     208]  0x00000000
+      [     209]  0x80000094
+      [     210]  0x800000fc
+      [     211]  0x8000004e
+      [     212]  0x80000197
+      [     213]  0x00000000
+      [     214]  0x80000058
+      [     215]  0x800001f8
+      [     216]  0x800000a3
+      [     217]  0x00000000
+      [     218]  0x800001d6
+      [     219]  0x00000000
+      [     220]  0x80000048
+      [     221]  0x80000010
+      [     222]  0x00000000
+      [     223]  0x8000019b
+      [     224]  0x800001ae
+      [     225]  0x80000161
+      [     226]  0x00000000
+      [     227]  0x00000000
+      [     228]  0x00000000
+      [     229]  0x80000155
+      [     230]  0x00000000
+      [     231]  0x00000000
+      [     232]  0x8000019d
+      [     233]  0x80000115
+      [     234]  0x00000000
+      [     235]  0x00000000
+      [     236]  0x00000000
+      [     237]  0x00000000
+      [     238]  0x800000d5
+      [     239]  0x8000001f
+      [     240]  0x00000000
+      [     241]  0x00000000
+      [     242]  0x00000000
+      [     243]  0x00000000
+      [     244]  0x800000cb
+      [     245]  0x00000000
+      [     246]  0x80000077
+      [     247]  0x00000000
+      [     248]  0x80000100
+      [     249]  0x800000e0
+      [     250]  0x80000176
+      [     251]  0x00000000
+      [     252]  0x00000000
+      [     253]  0x00000000
+      [     254]  0x00000000
+      [     255]  0x00000000
+
+    Virtual Address Trace
+      VA 0x08f76dc9 (decimal: 150433225) --> PA or invalid address?
+      VA 0x0e82d2ff (decimal: 243454719) --> PA or invalid address?
+      VA 0x0eaeed19 (decimal: 246344985) --> PA or invalid address?
+      VA 0x046752b5 (decimal: 73880245) --> PA or invalid address?
+      VA 0x0a57b770 (decimal: 173520752) --> PA or invalid address?
+
+    For each virtual address, write down the physical address it translates to
+    OR write down that it is an out-of-bounds address (e.g., segfault).
+
+VA = 0x8f76dc9 = 0b 1000 1111 0111 0110 1101 1100 1001
+VPN = 0b 1000 1111 = 143, offset = 0b 0111 0110 1101 1100 1001
+PFN = 0x2b = 0b 0010 1011
+PA = 0b 0010 1011 0111 0110 1101 1100 1001 = 0x 2b76dc9
+
+VA = 0xe82d2ff = 0b 1110 1000 0010 1101 0010 1111 1111
+VPN = 0b 1110 1000 = 232, offset = 0b 0010 1101 0010 1111 1111
+PFN = 0x19d = 0b 0001 1001 1101
+PA = 0b 0001 1001 1101 1110 1000 0010 1101 0010 1111 1111 = 0x 19 d2 d2 ff
+
+VA = 0xeaeed19 = 0b 1110 1010 1110 1110 1101 0001 1001
+VPN = 0b 1110 1010 = 234, offset = 0b 1110 1110 1101 0001 1001
+The MSB of PTE 234 is 0, so this VA is invalid.
+
+VA = 0x46752b5 = 0b 0100 0110 0111 0101 0010 1011 0101
+VPN = 0b 0100 0110 = 70, offset = 0b 0111 0101 0010 1011 0101
+The MSB of PTE 70 is 0, so this VA is invalid.
+
+VA = 0xa57b770 = 0b 1010 0101 0111 1011 0111 0111 0000
+VPN = 0b 1010 0101 = 128 + 32 + 5 = 165, offset = 0b 0111 0101 0010 1011 0101
+The MSB of PTE 165 is 0, so this VA is invalid.
+
+Of these simulated machines, the first is the only one that seems truly
+unrealistic, because a 32 byte address space is simply too small to store any
+meaningful program.

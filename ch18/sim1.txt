@@ -1,0 +1,38 @@
+All else being equal, as the address space grows, more pages will be required
+to fill it; thus, the number of entries in the page table will also grow. This
+prediction is confirmed by the following simulations mentioned in the problem:
+
+    $ ./paging-linear-translate.py --asize=1m --numaddrs=0 --pagesize=1k \
+                                   --physmem=512m --seed=0 -v
+    [...]
+
+    $ ./paging-linear-translate.py --asize=2m --numaddrs=0 --pagesize=1k \
+                                   --physmem=512m --seed=0 -v
+    [...]
+
+    $ ./paging-linear-translate.py --asize=4m --numaddrs=0 --pagesize=1k \
+                                   --physmem=512m --seed=0 -v
+    [...]
+
+On the other hand, with a growing page size, a given address space will be
+allocated fewer and fewer pages, as each one takes up more room. This will
+yield a page table with fewer entries. This is confirmed by the following
+simulations:
+
+    $ ./paging-linear-translate.py --asize=1m --numaddrs=0 --pagesize=1k \
+                                   --physmem=512m --seed=0 -v
+    [...]
+
+    $ ./paging-linear-translate.py --asize=1m --numaddrs=0 --pagesize=2k \
+                                   --physmem=512m --seed=0 -v
+    [...]
+
+    $ ./paging-linear-translate.py --asize=1m --numaddrs=0 --pagesize=4k \
+                                   --physmem=512m --seed=0 -v
+    [...]
+
+As always, there is a trade-off to consider when selecting page size. Smaller
+pages offer greater granularity, meaning that less space on some page is
+likely to go unused, but the page table will be large because each page must
+have an entry in it. Similarly, large pages are less granular, potentially
+leaving more individual page space unused, but the page table will be smaller.
