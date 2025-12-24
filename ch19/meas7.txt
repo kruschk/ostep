@@ -1,0 +1,10 @@
+Assuming the OS performs demand zeroing, it will impact the benchmarking
+program because a data-clearing penalty will be incurred during the first
+access of each page; however, the impact should be effectively imperceptible
+due to the large number of trials. The penalty can be further mitigated, if
+not outright eliminated, by touching each page before beginning the
+benchmarking process.
+
+In this case, the mitigation has no clear effect, probably because calloc was
+already used in the original implementation, and the pages were therefore
+already being accessed while memory was being cleared.

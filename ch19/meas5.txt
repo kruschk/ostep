@@ -1,0 +1,4 @@
+The best way to be certain that the compiler hasn't removed the main loop as
+an optimisation is to inspect the assembly code (with the help of the -S
+flag). In this case it hasn't, but the -O option could be used to fine tune
+the optimisation process if needed.

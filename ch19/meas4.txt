@@ -1,0 +1,20 @@
+From the plots, the access time on this machine (featuring a good old reliable
+Intel i5-750 CPU) is relatively constant at around 8 ns for a wide range of
+page accesses. This trend holds until a threshold of approximately 2048 pages,
+at which point the access time roughly doubles, reaching about 16 ns. Given
+that the OS is configured to use 4 kiB pages, this equates to 2048 * 4096 B =
+8,388,608 B = 8 MiB of memory, which, notably, corresponds with the machine's
+8 MiB L3 cache. One can therefore conclude that L3 cache misses begin to occur
+around this threshold.
+
+It is interesting to note that there aren't clear steps in the plots showing
+where the L1 and L2 caches begin to miss, although for very small page counts
+the access time does tend to be slightly less than the L3 cache's 8 ns access
+time. This may be a problem with the program that will hopefully be addressed
+in one of the later questions.
+
+The question posed in the text may be somewhat philosophical, but one view is
+that plotting data is a form of compression, distilling information to its
+essence so that it can be interpreted more easily. The human mind is also well
+adapted to processing visual information, so presenting it in that form
+complements one of the natural proclivities of the brain.
