@@ -1,0 +1,4 @@
+In all cases, only one register is needed. With multi-level page tables, the
+register simply stores the physical location of the page directory. The page
+directory can in turn be referenced to locate the next level (be that another
+page directory or a page table).

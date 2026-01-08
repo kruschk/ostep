@@ -1,0 +1,8 @@
+Assuming the logic in figure 20.6 in the text is used, page table accesses
+aren't looked up in the TLB, so the question of cache hits or misses is
+irrelevant; page table accesses are better thought of as a result of a cache
+miss. Indeed, the logic never caches the physical memory location of the page
+table; instead, it caches the VPN-to-PTE mapping directly. This is fine,
+however, because the next time a virtual address with the same VPN is
+referenced, the mapping will (likely) already be cached, leading to a cache
+hit and obviating an additional page table access.
